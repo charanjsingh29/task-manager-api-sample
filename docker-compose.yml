@@ -43,6 +43,21 @@ services:
     volumes:
       - kafka_data:/bitnami/kafka
 
+  # === Api Gateway ===
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./api-gateway:/app
+      - /app/node_modules
+    environment:
+      - JWT_SECRET=p8E$j2K#mN9q5R@vX7zL4wY3hB&tF6cA
+      - INTERNAL_SECRET_TOKEN=testing
+    depends_on:
+      - user-service
+
   # === User Microservice ===
   user-service:
     build: ./services/user-service
@@ -51,18 +66,21 @@ services:
       - "4001:4001"
     volumes:
       - ./services/user-service:/app
+      - /app/node_modules
       - ./shared:/app/src/shared
-    depends_on:
-      - mysql
-      - redis
-      - kafka
     environment:
+      - JWT_SECRET=p8E$j2K#mN9q5R@vX7zL4wY3hB&tF6cA
       - DB_HOST=mysql
       - DB_USER=projectuser
       - DB_PASS=projectpass
       - DB_NAME=projectdb
       - REDIS_HOST=redis
       - KAFKA_BROKER=kafka:9092
+      - INTERNAL_SECRET_TOKEN=testing
+    depends_on:
+      - mysql
+      - redis
+      - kafka
 
 volumes:
   mysql_data:

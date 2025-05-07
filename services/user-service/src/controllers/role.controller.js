@@ -1,6 +1,6 @@
 const { Op } = require('sequelize');
 const { roleSchema, rolesCollection } = require('../response_schemas/role.schema');
-const { Role, Permission, User } = require('../shared/database/models');
+const { Role, Permission, User } = require('../database/models');
 const publisher = require('../shared/publisher');
 const logger = require('../shared/utils/logger');
 // const cache = require('../libs/MemCache');

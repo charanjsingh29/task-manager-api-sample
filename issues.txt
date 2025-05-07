@@ -1,0 +1,2 @@
+When passing user info in headers from gateway to microservices, 
+if microservices are directly exposed then person can send anything in headers

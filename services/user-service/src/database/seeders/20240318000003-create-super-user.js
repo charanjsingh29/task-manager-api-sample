@@ -6,7 +6,7 @@ module.exports = {
     // Create super user
     const superUser = {
       name: 'Super User',
-      email: 'superuser@docucenter.com',
+      email: 'superuser@task.com',
       password: await bcrypt.hash('admin', 10),
       created_at: new Date(),
       updated_at: new Date()

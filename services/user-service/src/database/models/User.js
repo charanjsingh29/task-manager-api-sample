@@ -66,11 +66,6 @@ const UserModel = User.init({
     allowNull: false,
     defaultValue: 1,
     comment: '1: Active, 0: Inactive'
-  },
-  last_login: {
-    type: DataTypes.DATE,
-    allowNull: true,
-    defaultValue: null
   }
 }, {
   sequelize: DefaultConnection,

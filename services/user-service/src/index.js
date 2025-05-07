@@ -1,6 +1,6 @@
 const app = require('./app');
 const http = require('http');
-const DefaultConnection= require('./shared/database/config/connection');
+const DefaultConnection= require('./database/config/connection');
 const logger = require('./shared/utils/logger');
 const socket = require('./shared/utils/socket');
 // require('./crons');

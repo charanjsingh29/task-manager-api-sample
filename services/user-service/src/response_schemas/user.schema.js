@@ -31,7 +31,6 @@ const userSchema = (user) => {
       email: user.email,
       phone: user.phone,
       status: user.status != undefined ? statusSchema(user.status): undefined,
-      last_login: user.last_login,
       // roles: user.roles ? userRoleTransformer.rolesCollection(user.roles) : undefined,
       permissions: user.permissions ?? [],
     };

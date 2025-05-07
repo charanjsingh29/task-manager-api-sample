@@ -1,30 +1,28 @@
 const express = require('express');
-const cors = require('cors');
 const cookieParser = require("cookie-parser");
-require('dotenv').config();
 
 // Import middleware
-const errorHandler = require('./shared/middlewares/errorHandler');
-const delayedResponse = require('./shared/middlewares/delayedResponse');
-const userContextMiddleware = require('./shared/middlewares/userContext');
+const errorHandler = require('./shared/middlewares/error_handler');
+const userContextMiddleware = require('./shared/middlewares/user_context');
 
 const app = express();
 
 // Middleware
 app.use(cookieParser());
-app.use(cors({
-    origin: '*',
-    credentials: true // Allow cookies
-}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Add user context middleware after authentication
-app.use(userContextMiddleware);
+// app.use(userContextMiddleware);
 
-app.use('/users', delayedResponse, require('./routes/user.routes'));
-app.use('/roles', delayedResponse, require('./routes/role.routes'));
+const internalAuth = require('./shared/middlewares/internal_auth');
 
+app.use('/internal', internalAuth, require('./routes/internal.routes'));
+app.use('/auth', require('./routes/auth.routes'));
+// app.use('/roles', userContextMiddleware, require('./routes/role.routes'));
+
+
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
 // Error handling
 app.use(errorHandler);
 

@@ -11,19 +11,12 @@ module.exports = {
         updated_at: new Date() 
       },
       { 
-        name: 'Superior Officer', 
+        name: 'User', 
         is_hidden: false, 
         is_default: true,
         created_at: new Date(), 
         updated_at: new Date() 
       },
-      { 
-        name: 'Junior Officer', 
-        is_hidden: false, 
-        is_default: true,
-        created_at: new Date(), 
-        updated_at: new Date() 
-      }
     ];
 
     await queryInterface.bulkInsert('roles', roles, {});

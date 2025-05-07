@@ -23,7 +23,14 @@ module.exports = {
         allowNull: false
       },
       phone: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      status: {
+        type: Sequelize.TINYINT.UNSIGNED,
+        allowNull: false,
+        defaultValue: 1,
+        comment: '1: Active, 0: Inactive'
       },
       created_at: {
         type: Sequelize.DATE,
