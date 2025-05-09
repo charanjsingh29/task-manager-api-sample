@@ -69,6 +69,7 @@ services:
       - /app/node_modules
       - ./shared:/app/src/shared
     environment:
+      - PORT=4001
       - JWT_SECRET=p8E$j2K#mN9q5R@vX7zL4wY3hB&tF6cA
       - DB_HOST=mysql
       - DB_USER=projectuser
@@ -93,6 +94,31 @@ services:
       - /app/node_modules
       - ./shared:/app/src/shared
     environment:
+      - PORT=4002
+      - DB_HOST=mysql
+      - DB_USER=projectuser
+      - DB_PASS=projectpass
+      - DB_NAME=projectdb
+      - REDIS_HOST=redis
+      - KAFKA_BROKER=kafka:9092
+      - INTERNAL_SECRET_TOKEN=testing
+    depends_on:
+      - mysql
+      - redis
+      - kafka
+
+  # === Tasks Microservice ===
+  task-service:
+    build: ./services/task-service
+    container_name: task-service
+    ports:
+      - "4003:4003"
+    volumes:
+      - ./services/task-service:/app
+      - /app/node_modules
+      - ./shared:/app/src/shared
+    environment:
+      - PORT=4003
       - DB_HOST=mysql
       - DB_USER=projectuser
       - DB_PASS=projectpass

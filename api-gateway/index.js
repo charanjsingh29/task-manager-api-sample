@@ -19,6 +19,7 @@ app.use(rateLimit);
 // Auth middleware for protected routes
 app.use('/api/users', authMiddleware);
 app.use('/api/teams', authMiddleware);
+app.use('/api/tasks', authMiddleware);
 
 // Proxy setup
 app.use('/api/auth', createProxyMiddleware({ 
@@ -41,6 +42,16 @@ app.use('/api/teams', createProxyMiddleware({
     target: 'http://team-service:4002', 
     changeOrigin: true,
     pathRewrite: { '^': '/teams' },
+    cookieDomainRewrite: '',
+    onError: (err, req, res) => {
+        console.error('Proxy error:', err);
+        res.status(500).send('Proxy error');
+    },
+}));
+app.use('/api/tasks', createProxyMiddleware({ 
+    target: 'http://task-service:4003', 
+    changeOrigin: true,
+    pathRewrite: { '^': '/tasks' },
     cookieDomainRewrite: '',
     onError: (err, req, res) => {
         console.error('Proxy error:', err);

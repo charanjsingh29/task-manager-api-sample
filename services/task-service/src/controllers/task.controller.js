@@ -1,100 +1,90 @@
 const { 
-    getTeams, 
-    getSingleTeam, 
-    getTeamUsers,
-    addUserToTeam,
-    removeUserFromTeam
- } = require('../database/daos/team.dao');
+    getTasks, 
+    getSingleTask,
+    getTaskUsers,
+    addUserToTask,
+    removeUserFromTask
+} = require('../database/daos/task.dao');
+const { Task } = require('../database/models');
 const logger = require('../shared/utils/logger');
 const axios = require('../shared/utils/axios');
-const { Team } = require('../database/models');
-const { USER_SERVICE_URL } = require('../shared/utils/constants');
 
-// Get all teams
 exports.getAll = async (req, res) => {
     try {
-        const teams = await getTeams(req.user.id);
-        res.json(teams);
+        const tasks = await getTasks(req.user.id);
+        res.json(tasks);
     } catch (error) {
-        logger.error('Get all teams error:', error);
+        logger.error(error);
         res.status(500).json({ message: 'Internal server error' });
     }
-};
+}
 
-// Get team by ID
 exports.getById = async (req, res) => {
     try {
-        const team = await getSingleTeam(req.params.id, req.user.id);
-        if (!team) {
-            return res.status(404).json({ message: 'Team not found' });
+        const task = await getSingleTask(req.params.id, req.user.id);
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found' });
         }
-        res.json(team);
+        res.json(task);
     } catch (error) {
-        logger.error('Get team by ID error:', error);
+        logger.error(error);
         res.status(500).json({ message: 'Internal server error' });
     }
-};
+}
 
-// Create new team
 exports.create = async (req, res) => {
     try {
-        const { name } = req.body;
-        const team = await Team.create({
-            name,
-            manager_id: req.user.id,
+        const { title, description, due_date } = req.body;
+        const task = await Task.create({
+            title,
+            description,
+            due_date,
             created_by: req.user.id
         });
-        res.status(201).json(team);
+        res.status(201).json(task);
     } catch (error) {
-        logger.error('Create team error:', error);
+        logger.error(error);
         res.status(500).json({ message: 'Internal server error' });
     }
-};
+}
 
-// Update team
 exports.update = async (req, res) => {
     try {
-        const { name } = req.body;
-        const team = await getSingleTeam(req.params.id, req.user.id);
-
-        if (!team) {
-            return res.status(404).json({ message: 'Team not found' });
+        const { title, description, due_date } = req.body;
+        const task = await getSingleTask(req.params.id, req.user.id);
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found' });
         }
-
-        await team.update({
-            name,
-        });
-
-        res.json(team);
+        task.title = title;
+        task.description = description;
+        task.due_date = due_date;
+        await task.save();
+        res.json(task);
     } catch (error) {
-        logger.error('Update team error:', error);
+        logger.error(error);
         res.status(500).json({ message: 'Internal server error' });
     }
-};
+}
 
-// Delete team
 exports.delete = async (req, res) => {
     try {
-        const team = await getSingleTeam(req.params.id, req.user.id);
-        
-        if (!team) {
-            return res.status(404).json({ message: 'Team not found' });
+        const task = await getSingleTask(req.params.id, req.user.id);
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found' });
         }
-
-        await team.destroy();
-        res.json({ message: 'Team deleted successfully' });
+        await task.destroy();
+        res.json({ message: 'Task deleted' });
     } catch (error) {
-        logger.error('Delete team error:', error);
+        logger.error(error);
         res.status(500).json({ message: 'Internal server error' });
     }
-};
+}
 
-// Assign users to team
 exports.assignUsers = async (req, res) => {
     try {
-        const team = await getSingleTeam(req.params.id, req.user.id);
-        if (!team) {
-            return res.status(404).json({ message: 'Team not found' });
+        const task = await getSingleTask(req.params.id, req.user.id);
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found' });
         }
 
         const { emails } = req.body;
@@ -107,7 +97,7 @@ exports.assignUsers = async (req, res) => {
             }
         );
         const user_ids = response.data.users.map((user) => user.id);
-        await addUserToTeam(team.id, user_ids);
+        await addUserToTask(task.id, user_ids);
 
         res.json({ message: 'Users assigned successfully' });
     } catch (error) {
@@ -121,16 +111,16 @@ exports.assignUsers = async (req, res) => {
     }
 };
 
-// Get all users in a team
+// Get all users in a task
 exports.allUsers = async (req, res) => {
     try {
-        const team = await getTeamUsers(req.params.id, req.user.id);
+        const task = await getTaskUsers(req.params.id, req.user.id);
         
-        if (!team) {
-            return res.status(404).json({ message: 'Team not found' });
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found' });
         }
 
-        const userIds = team.users.map((user) => user.user_id);
+        const userIds = task.users.map((user) => user.user_id);
 
         // Get detailed user information from user-service
         try {
@@ -152,18 +142,18 @@ exports.allUsers = async (req, res) => {
     }
 };
 
-// Remove user from team
+// Remove user from task
 exports.removeUser = async (req, res) => {
     try {
-        const team = await getSingleTeam(req.params.id, req.user.id);
-        if (!team) {
-            return res.status(404).json({ message: 'Team not found' });
+        const task = await getSingleTask(req.params.id, req.user.id);
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found' });
         }
 
-        await removeUserFromTeam(req.params.user_id);
-        res.json({ message: 'User removed from team successfully' });
+        await removeUserFromTask(req.params.id, req.params.user_id);
+        res.json({ message: 'User removed from task successfully' });
     } catch (error) {
-        logger.error('Remove user from team error:', error);
+        logger.error('Remove user from task error:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
