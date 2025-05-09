@@ -1,5 +1,5 @@
 // shared/middleware/userContext.js
-const axios = require('axios');
+const axios = require('../utils/axios');
 const redis = require('../utils/redis');
 
 module.exports = async function userContext(req, res, next) {
@@ -18,12 +18,7 @@ module.exports = async function userContext(req, res, next) {
     }
 
     const response = await axios.get(
-      `http://user-service:3000/internal/users/${userId}`,
-      {
-        headers: {
-          'x-internal-token': process.env.INTERNAL_SECRET_TOKEN
-        }
-      }
+      `http://user-service:4001/internal/users/${userId}`
     );
 
     user = response.data;

@@ -1,28 +1,31 @@
 'use strict';
 const bcrypt = require('bcryptjs');
 
+// Create super user
+const superUser = {
+  name: 'Super User',
+  email: 'superuser@task.com',
+  created_at: new Date(),
+  updated_at: new Date()
+};
+
+const superAdmin = 'Super-admin';
+
 module.exports = {
   async up(queryInterface, Sequelize) {
-    // Create super user
-    const superUser = {
-      name: 'Super User',
-      email: 'superuser@task.com',
-      password: await bcrypt.hash('admin', 10),
-      created_at: new Date(),
-      updated_at: new Date()
-    };
-
+    const password = await bcrypt.hash('admin', 10);
+    superUser.password = password;
     // Insert user and get the ID
     await queryInterface.bulkInsert('users', [superUser]);
     
     // Get the created user's ID
     const [[user]] = await queryInterface.sequelize.query(
-      `SELECT id FROM users WHERE email = 'superuser@docucenter.com'`
+      `SELECT id FROM users WHERE email = '${superUser.email}'`
     );
     
     // Get role ID for Super-admin
     const [[superAdminRole]] = await queryInterface.sequelize.query(
-      `SELECT id FROM roles WHERE name = 'Super-admin'`
+      `SELECT id FROM roles WHERE name = '${superAdmin}'`
     );
     console.table({ user, superAdminRole });
 
@@ -39,7 +42,7 @@ module.exports = {
     // Remove in reverse order
     await queryInterface.bulkDelete('user_has_roles', null, {});
     await queryInterface.bulkDelete('users', {
-      email: 'superuser@docucenter.com'
+      email: superUser.email
     }, {});
   }
 };

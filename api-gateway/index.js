@@ -18,7 +18,7 @@ app.use(rateLimit);
 
 // Auth middleware for protected routes
 app.use('/api/users', authMiddleware);
-app.use('/api/tasks', authMiddleware);
+app.use('/api/teams', authMiddleware);
 
 // Proxy setup
 app.use('/api/auth', createProxyMiddleware({ 
@@ -31,16 +31,21 @@ app.use('/api/auth', createProxyMiddleware({
         res.status(500).send('Proxy error');
     },
 }));
-app.use('/api/users', createProxyMiddleware({ 
+/* app.use('/api/users', createProxyMiddleware({ 
     target: 'http://user-service:4001', 
     changeOrigin: true,
     pathRewrite: { '^': '/users' },
     cookieDomainRewrite: '',
-}));
-app.use('/api/tasks', createProxyMiddleware({ 
-    target: 'http://task-service:4002', 
+})); */
+app.use('/api/teams', createProxyMiddleware({ 
+    target: 'http://team-service:4002', 
     changeOrigin: true,
+    pathRewrite: { '^': '/teams' },
     cookieDomainRewrite: '',
+    onError: (err, req, res) => {
+        console.error('Proxy error:', err);
+        res.status(500).send('Proxy error');
+    },
 }));
 
 app.get('/health', (req, res) => res.json({ status: 'ok' }));

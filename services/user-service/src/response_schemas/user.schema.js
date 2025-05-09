@@ -32,7 +32,7 @@ const userSchema = (user) => {
       phone: user.phone,
       status: user.status != undefined ? statusSchema(user.status): undefined,
       // roles: user.roles ? userRoleTransformer.rolesCollection(user.roles) : undefined,
-      permissions: user.permissions ?? [],
+      permissions: user.permissions ?? undefined,
     };
   };
   

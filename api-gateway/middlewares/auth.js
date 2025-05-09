@@ -11,10 +11,8 @@ module.exports = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     // Attach decoded info to custom headers
     req.headers['x-user-id'] = decoded.id;
-    req.headers['x-user-role'] = decoded.role;
     req.headers['x-user-email'] = decoded.email;
     
-    req.user = user;
     next();
   } catch (error) {
     console.error(error);

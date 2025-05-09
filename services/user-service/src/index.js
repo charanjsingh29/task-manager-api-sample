@@ -3,6 +3,8 @@ const http = require('http');
 const DefaultConnection= require('./database/config/connection');
 const logger = require('./shared/utils/logger');
 const socket = require('./shared/utils/socket');
+const migrationRunner = require('./database/migrate');
+const seederRunner = require('./database/seed');
 // require('./crons');
 
 
@@ -10,8 +12,11 @@ const PORT = process.env.PORT || 4001;
 
 async function startServer() {
   try {
-    await DefaultConnection.authenticate();
-    logger.info('Default Database connection established successfully.');
+    await DefaultConnection.authenticate().then(async () => {
+      logger.info('Default Database connection established successfully.');
+      await migrationRunner();
+      await seederRunner();
+    });
 
     const server = http.createServer(app);
 

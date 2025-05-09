@@ -12,25 +12,6 @@ class User extends Model {
       timestamps: true,
       underscored: true
     });
-
-    User.belongsToMany(models.Tag, {
-      through: 'user_has_tags',
-      as: 'tags',
-      foreignKey: 'user_id',
-      otherKey: 'tag_id',
-      timestamps: false
-    })
-    
-    // Add any other User associations here
-    User.hasMany(models.Document, {
-      foreignKey: 'created_by',
-      as: 'createdDocuments'
-    });
-    
-    User.hasMany(models.Document, {
-      foreignKey: 'assigned_to',
-      as: 'assignedDocuments'
-    });
   }
 
   async validatePassword(password) {
@@ -78,8 +59,6 @@ const UserModel = User.init({
       user.password = await bcrypt.hash(user.password, 10);
     },
     beforeUpdate: async (user) => {
-      console.log(user.password);
-      console.log(user.changed('password'));
       if (user.password.trim() != "" && user.changed('password')) {
         user.password = await bcrypt.hash(user.password, 10);
       }

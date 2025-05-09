@@ -14,11 +14,11 @@ module.exports = {
         allowNull: false
       },
       manager_id: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       created_by: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         allowNull: false
       },
       created_at: {

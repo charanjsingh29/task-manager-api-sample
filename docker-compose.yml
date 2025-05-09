@@ -84,16 +84,15 @@ services:
 
   # === Teams Microservice ===
   team-service:
-    build:./services/team-service
+    build: ./services/team-service
     container_name: team-service
     ports:
       - "4002:4002"
     volumes:
-      -./services/team-service:/app
+      - ./services/team-service:/app
       - /app/node_modules
-      -./shared:/app/src/shared
+      - ./shared:/app/src/shared
     environment:
-      - JWT_SECRET=p8E$j2K#mN9q5R@vX7zL4wY3hB&tF6cA
       - DB_HOST=mysql
       - DB_USER=projectuser
       - DB_PASS=projectpass

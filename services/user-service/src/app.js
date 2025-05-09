@@ -18,11 +18,11 @@ app.use(express.urlencoded({ extended: true }));
 const internalAuth = require('./shared/middlewares/internal_auth');
 
 app.use('/internal', internalAuth, require('./routes/internal.routes'));
+app.get('/auth/health', (req, res) => res.json({ status: 'ok' }));
 app.use('/auth', require('./routes/auth.routes'));
 // app.use('/roles', userContextMiddleware, require('./routes/role.routes'));
 
 
-app.get('/health', (req, res) => res.json({ status: 'ok' }));
 // Error handling
 app.use(errorHandler);
 

@@ -1,5 +1,5 @@
-const Team = require('./Team');
-const TeamHasUser = require('./TeamHasUser');
+const Team = require('./team');
+const TeamHasUser = require('./team_has_user');
 
 const models = {
   Team,

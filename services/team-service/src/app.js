@@ -10,16 +10,13 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Add user context middleware after authentication
-// app.use(userContextMiddleware);
-
 const internalAuth = require('./shared/middlewares/internal_auth');
 
 app.use('/internal', internalAuth, require('./routes/internal.routes'));
+app.get('/teams/health', (req, res) => res.json({ status: 'ok' }));
 app.use('/teams', userContextMiddleware, require('./routes/team.routes'));
 
 
-app.get('/health', (req, res) => res.json({ status: 'ok' }));
 // Error handling
 app.use(errorHandler);
 

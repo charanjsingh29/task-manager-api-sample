@@ -2,6 +2,12 @@ const { Model, DataTypes } = require('sequelize');
 const DefaultConnection = require('../config/connection');
 
 class Team extends Model {
+  static associate(models) {
+    Team.hasMany(models.TeamHasUser, {
+      foreignKey: 'team_id',
+      as: 'users'
+    });
+  }
 }
 
 const TeamModel = Team.init({
