@@ -1,11 +1,9 @@
-const Permission = require('./Permission');
-const Role = require('./Role');
-const User = require('./User');
+const Team = require('./Team');
+const TeamHasUser = require('./TeamHasUser');
 
 const models = {
-  Permission,
-  Role,
-  User,
+  Team,
+  TeamHasUser,
 };
 
 // Initialize all associations

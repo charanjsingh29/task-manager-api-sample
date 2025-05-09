@@ -82,6 +82,30 @@ services:
       - redis
       - kafka
 
+  # === Teams Microservice ===
+  team-service:
+    build:./services/team-service
+    container_name: team-service
+    ports:
+      - "4002:4002"
+    volumes:
+      -./services/team-service:/app
+      - /app/node_modules
+      -./shared:/app/src/shared
+    environment:
+      - JWT_SECRET=p8E$j2K#mN9q5R@vX7zL4wY3hB&tF6cA
+      - DB_HOST=mysql
+      - DB_USER=projectuser
+      - DB_PASS=projectpass
+      - DB_NAME=projectdb
+      - REDIS_HOST=redis
+      - KAFKA_BROKER=kafka:9092
+      - INTERNAL_SECRET_TOKEN=testing
+    depends_on:
+      - mysql
+      - redis
+      - kafka
+
 volumes:
   mysql_data:
   redis_data:

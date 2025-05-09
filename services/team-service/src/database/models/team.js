@@ -1,40 +1,33 @@
 const { Model, DataTypes } = require('sequelize');
 const DefaultConnection = require('../config/connection');
 
-class ActivityLog extends Model {}
+class Team extends Model {
+}
 
-const ActivityLogModel = ActivityLog.init({
+const TeamModel = Team.init({
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
-  description: {
-    type: DataTypes.TEXT,
-    allowNull: false
-  },
-  action_type: {
+  name: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  user_id: {
-    type: DataTypes.INTEGER,
-    allowNull: true
-  },
-  entity_type: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  entity_id: {
+  manager_id: {
     type: DataTypes.INTEGER,
     allowNull: false
-  }
+  },
+  created_by: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
 }, {
   sequelize: DefaultConnection,
-  modelName: 'ActivityLog',
-  tableName: 'activity_logs',
+  modelName: 'Team',
+  tableName: 'teams',
   underscored: true,
-  timestamps: false,
+  timestamps: true
 });
 
-module.exports = ActivityLogModel;
+module.exports = TeamModel;
