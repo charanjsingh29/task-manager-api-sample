@@ -13,8 +13,7 @@ A scalable and modular Task Management System built using **Node.js (Express)** 
 - 🔄 Real-time Notifications via Socket.IO
 - 📋 Comprehensive Project and Task Management
 - 🔄 Task Assignment with Team/User linking
-- 🤖 (Optional) AI-assisted Task Descriptions via ChatGPT
-- 🔧 Docker + Sequelize + Swagger for DevOps and API Documentation
+- 🔧 Docker + Sequelize
 
 ---
 
