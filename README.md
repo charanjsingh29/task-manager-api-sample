@@ -151,16 +151,6 @@ A scalable and modular Task Management System built using **Node.js (Express)** 
 
 ---
 
-## 🧪 Testing
-
-Tests can be implemented using your preferred framework (e.g., Jest, Mocha). Add coverage for:
-- Auth flows
-- Task CRUD & assignment
-- Notifications
-- Permissions & role enforcement
-
----
-
 ## 🚀 Deployment
 
 The app is Docker-ready. Use Nginx for routing and reverse proxy.
