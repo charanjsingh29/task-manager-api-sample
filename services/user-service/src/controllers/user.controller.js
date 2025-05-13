@@ -4,7 +4,6 @@ const { userSchema, userCollection } = require('../response_schemas/user.schema'
 const { User, Role } = require('../database/models');
 const { getUserAndPermissions, getPermissionsByRoles } = require('../database/daos/user.dao');
 const logger = require('../shared/utils/logger');
-const publisher = require('../shared/publisher');
 
 exports.getUsers = async (req, res) => {
   try {

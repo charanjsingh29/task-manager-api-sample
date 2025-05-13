@@ -1,6 +1,7 @@
 const events = require('./events');
+const kafka = require('./kafka');
 
-const send = function (event, meta, data) {
+const send = async function (event, meta, data) {
   const QUEUE_SYSTEM = process.env.QUEUE_SYSTEM || 'none';
   const payload = {
     meta,
@@ -12,7 +13,13 @@ const send = function (event, meta, data) {
       events.send(event, payload);
       break;
     case 'kafka':
-      // TODO: implement kafka sender
+      // In your service code
+      await publisher.connect();
+      await publisher.publishNotification({
+          userId: 123,
+          message: 'New task assigned',
+          taskId: 456
+      });
       break;
     default:
         // TODO; directily added to database

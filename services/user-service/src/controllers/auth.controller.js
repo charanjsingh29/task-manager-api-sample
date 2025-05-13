@@ -9,7 +9,6 @@ const {
   getUserAndPermissions 
 } = require('../database/daos/user.dao');
 const logger = require('../shared/utils/logger');
-const publisher = require('../shared/publisher');
 
 function generateAccessToken(user) {
     return jwt.sign(
@@ -128,12 +127,6 @@ exports.register = async (req, res) => {
     await user.setRoles([userRole.id]);
 
     const userRes = userSchema(user);
-
-    publisher.send(
-      'user.register',
-      {},
-      userRes 
-    );
 
     res.status(201).json(userRes);
   } catch (error) {

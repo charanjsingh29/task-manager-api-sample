@@ -26,22 +26,22 @@ services:
       - redis_data:/data
 
   # === Kafka (with KRaft mode, no Zookeeper) ===
-  kafka:
-    image: bitnami/kafka:latest
-    container_name: task-mngr-kafka
-    ports:
-      - "9092:9092"
-    environment:
-      KAFKA_CFG_NODE_ID: 0
-      KAFKA_CFG_PROCESS_ROLES: broker,controller
-      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafka:9093
-      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
-      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-      KAFKA_KRAFT_CLUSTER_ID: kraft-cluster-1
-    volumes:
-      - kafka_data:/bitnami/kafka
+  # kafka:
+  #   image: bitnami/kafka:latest
+  #   container_name: task-mngr-kafka
+  #   ports:
+  #     - "9092:9092"
+  #   environment:
+  #     KAFKA_CFG_NODE_ID: 0
+  #     KAFKA_CFG_PROCESS_ROLES: broker,controller
+  #     KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafka:9093
+  #     KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+  #     KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+  #     KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+  #     KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+  #     KAFKA_KRAFT_CLUSTER_ID: kraft-cluster-1
+  #   volumes:
+  #     - kafka_data:/bitnami/kafka
 
   # === Api Gateway ===
   api-gateway:
@@ -76,12 +76,10 @@ services:
       - DB_PASS=projectpass
       - DB_NAME=projectdb
       - REDIS_HOST=redis
-      - KAFKA_BROKER=kafka:9092
       - INTERNAL_SECRET_TOKEN=testing
     depends_on:
       - mysql
       - redis
-      - kafka
 
   # === Teams Microservice ===
   team-service:
@@ -100,12 +98,10 @@ services:
       - DB_PASS=projectpass
       - DB_NAME=projectdb
       - REDIS_HOST=redis
-      - KAFKA_BROKER=kafka:9092
       - INTERNAL_SECRET_TOKEN=testing
     depends_on:
       - mysql
       - redis
-      - kafka
 
   # === Tasks Microservice ===
   task-service:
@@ -124,12 +120,32 @@ services:
       - DB_PASS=projectpass
       - DB_NAME=projectdb
       - REDIS_HOST=redis
-      - KAFKA_BROKER=kafka:9092
       - INTERNAL_SECRET_TOKEN=testing
     depends_on:
       - mysql
       - redis
-      - kafka
+
+  # === Notifications Microservice ===
+  notification-service:
+    build: ./services/notification-service
+    container_name: notification-service
+    ports:
+      - "4004:4004"
+    volumes:
+      - ./services/notification-service:/app
+      - /app/node_modules
+      - ./shared:/app/src/shared
+    environment:
+      - PORT=4004
+      - DB_HOST=mysql
+      - DB_USER=projectuser
+      - DB_PASS=projectpass
+      - DB_NAME=projectdb
+      - REDIS_HOST=redis
+      - INTERNAL_SECRET_TOKEN=testing
+    depends_on:
+      - mysql
+      - redis
 
 volumes:
   mysql_data:

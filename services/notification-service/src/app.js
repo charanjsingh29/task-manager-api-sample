@@ -10,12 +10,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const internalAuth = require('./shared/middlewares/internal_auth');
 
-app.use('/internal', internalAuth, require('./routes/internal.routes'));
-app.get('/tasks/health', (req, res) => res.json({ status: 'ok' }));
-app.use('/tasks', userContextMiddleware, require('./routes/task.routes'));
-app.use('/tasks', userContextMiddleware, require('./routes/comment.routes'));
+app.get('/notifications/health', (req, res) => res.json({ status: 'ok' }));
+app.use('/notifications', userContextMiddleware, require('./routes/notification.routes'));
 
 
 // Error handling

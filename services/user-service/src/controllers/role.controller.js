@@ -1,7 +1,6 @@
 const { Op } = require('sequelize');
 const { roleSchema, rolesCollection } = require('../response_schemas/role.schema');
 const { Role, Permission, User } = require('../database/models');
-const publisher = require('../shared/publisher');
 const logger = require('../shared/utils/logger');
 // const cache = require('../libs/MemCache');
 
@@ -15,14 +14,6 @@ exports.createRole = async (req, res) => {
     }
 
     const roleResource = roleSchema(role);
-
-    publisher.send(
-      'role.created',
-      {
-        created_by: req.user.id,
-      },
-      roleResource 
-    );
     
     res.status(201).json(roleResource);
   } catch (error) {
@@ -134,14 +125,6 @@ exports.updateRole = async (req, res) => {
 
     const roleResource = roleSchema(role);
 
-    publisher.send(
-      'role.updated',
-      {
-        created_by: req.user.id,
-      },
-      roleResource 
-    );
-
     res.status(201).json(roleResource);
   } catch (error) {
     logger.error('Update role error:', error);
@@ -162,14 +145,6 @@ exports.deleteRole = async (req, res) => {
 
     await role.destroy();
     cache.clear();
-
-    publisher.send(
-      'role.deleted',
-      {
-        created_by: req.user.id,
-      },
-      roleResource 
-    );
 
     res.json({ message: 'Role deleted successfully' });
   } catch (error) {
